@@ -3,7 +3,7 @@ body{
     padding:0;
     text-align:center;
     font-size: 32px;
-    width: 1200;
+    
 }
 
 main {
@@ -11,7 +11,7 @@ main {
     background-repeat: repeat;
     animation: slide-diagonal 30s linear infinite;
     background-size: 120px 120px; /* ← アイコンのサイズに応じて調整 */
-    min-height: 600px;
+    min-height: 620px;
   }
   @keyframes slide-diagonal {
     from { background-position: 0 0; }
