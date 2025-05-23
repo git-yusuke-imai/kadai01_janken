@@ -5,7 +5,7 @@
 - 基本的にはじゃんけんのアプリ
 
 ## ③アプリのデプロイURL
-デプロイしている場合はURLを記入（任意）
+https://git-yusuke-imai.github.io/kadai01_janken/
 
 ## ④アプリのログイン用IDまたはPassword
 - ID: なし
