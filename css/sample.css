@@ -1,0 +1,50 @@
+body{
+    margin:0;
+    padding:0;
+    text-align:center;
+    font-size: 32px;
+    width: 1200;
+}
+
+main {
+    background-image: url("../img/icon.png");
+    background-repeat: repeat;
+    animation: slide-diagonal 30s linear infinite;
+    background-size: 120px 120px; /* ← アイコンのサイズに応じて調整 */
+    min-height: 600px;
+  }
+  @keyframes slide-diagonal {
+    from { background-position: 0 0; }
+    to   { background-position: 1000px 1000px; }
+  }
+
+header{
+    background-color: #f5ca66;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    height:100px;
+    overflow: hidden;       /* 必須：画像がはみ出たら隠す */
+    justify-content: center;
+  align-items: center;
+   
+    
+}
+h1{
+    font-size:40px;
+}
+
+footer{
+    background-color: #fba0ec;
+    border-bottom:0px solid #ccc;
+    display: flex;
+    height:100px;
+    overflow: hidden;       /* 必須：画像がはみ出たら隠す */
+}
+
+p{
+    font-size:200%;
+    text-align: center;
+    border-bottom:1px solid #fff;
+    height:200px;
+}
+

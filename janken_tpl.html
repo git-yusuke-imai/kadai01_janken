@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <link rel="stylesheet" href="css/sample.css">
+    <title>ちいかわじゃんけん</title>
+    <style>
+  .header-img {
+    width: 600px;
+    height: 80px;
+    position: absolute;
+  height: 100px;
+  animation: scroll-left 10s linear infinite;
+    object-fit: contain; /* 画像が変形しないように */
+  }
+  @keyframes scroll-left {
+  from {
+    left: 100%;   /* 画面外の右側から出発 */
+  }
+  to {
+    left: -100%;  /* 画面外の左側に消える */
+  }
+}
+.janken-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+}
+      
+.janken-button {
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid white;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: transform 0.2s;
+  animation: shake 0.9s infinite;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+      
+@keyframes shake {
+  0%   { transform: scale(1) rotate(0deg); }
+  25%  { transform: scale(1.02) rotate(1.5deg); }
+  50%  { transform: scale(1) rotate(0deg); }
+  75%  { transform: scale(1.02) rotate(-1.5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.janken-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px 5px rgba(255, 80, 80, 0.8);
+}
+
+.battle-area {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin-top: 0px;
+}
+
+.hand-img {
+  position: absolute;
+  width: 500px;
+  height: 300px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0;
+}
+
+.left-hand {
+  left: -350px;
+  top: 50px;
+}
+
+.right-hand {
+  right: -350px;
+  top: 50px;
+}
+
+.fade-in-left {
+  animation: fadeInLeft 1s forwards;
+}
+
+.fade-in-right {
+  animation: fadeInRight 1s forwards;
+}
+
+@keyframes fadeInLeft {
+  to {
+    left: 255px; 
+    opacity: 1;
+    }
+}
+
+@keyframes fadeInRight {
+    to {
+      right: 255px;
+      opacity: 1;
+    }
+}
+
+.judgment-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 150px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: translate(-50%, -50%);
+  display: none;
+  z-index: 10; /* 他の要素より前面に出す */
+}
+
+.footer-img {
+    width: 600px;
+    height: 80px;
+    position: absolute;
+  height: 100px;
+  animation: scroll-right 10s linear infinite;
+    object-fit: contain; /* 画像が変形しないように */
+}
+
+@keyframes scroll-right{
+  from {
+    left: -100%;   /* 画面外の右側から出発 */
+  }
+  to {
+    left: 100%;  /* 画面外の左側に消える */
+  }
+}
+
+      </style>
+</head>
+
+<body>
+
+    <header>
+        <img src="img/header.png" alt="ヘッダー画像" class="header-img">
+    </header>
+
+    <main>
+        <div class="janken-container">
+            <div id="gu_btn" class="janken-button" style="background-image: url('img/gu.png');"></div>
+            <div id="cho_btn" class="janken-button" style="background-image: url('img/cho.png');"></div>
+            <div id="par_btn" class="janken-button" style="background-image: url('img/par.png');"></div>
+        </div>
+          <!--<div id="judgment">勝ち</div>-->
+        <div class="battle-area">
+            <div id="pc_hand_img" class="hand-img right-hand"></div>
+            <div id="user_hand_img" class="hand-img left-hand"></div>
+        </div>
+
+        <!--<div>コンピュータの出した手は？「<span id="pc_hands">なに？</span>」</div>-->
+        
+       <!-- ポップアップ画像表示用 -->
+        <div id="judgment_popup" class="judgment-popup"></div>
+    </main>
+
+    <footer>
+        <img src="img/header.png" alt="ヘッダー画像" class="footer-img">
+    </footer>
+    <script>
+    function play(userHand) {
+    const r = Math.ceil(Math.random() * 3);
+    let pcHand, judg;
+
+    if (r === 1) pcHand = 'グー';
+    if (r === 2) pcHand = 'チョキ';
+    if (r === 3) pcHand = 'パー';
+
+    if (userHand === pcHand) {
+      judg = '相子だよ';
+    } else if (
+      (userHand === 'グー' && pcHand === 'チョキ') ||
+      (userHand === 'チョキ' && pcHand === 'パー') ||
+      (userHand === 'パー' && pcHand === 'グー')
+    ) {
+      judg = '勝ち';
+    } else {
+      judg = '負け';
+    }
+
+    $("#pc_hands").html(pcHand);
+    $("#judgment").html(judg);
+
+    const handImages = {
+      "グー": "img/btgu.png",
+      "チョキ": "img/btcho.png",
+      "パー": "img/btpar.png"
+    };
+
+    const pcImg = $("#pc_hand_img");
+    const userImg = $("#user_hand_img");
+
+    pcImg.removeClass("fade-in-right");
+    userImg.removeClass("fade-in-left");
+
+    void userImg[0].offsetWidth; // ←リセット
+    void pcImg[0].offsetWidth;
+
+
+    userImg.css("background-image", `url('${handImages[userHand]}')`);
+    pcImg.css("background-image", `url('${handImages[pcHand]}')`);
+
+    userImg.addClass("fade-in-left");
+
+    //userImg.one("animationend", function () {
+      //pcImg.addClass("fade-in-right");
+    //});
+
+    userImg.one("animationend", function () {
+    pcImg.addClass("fade-in-right");
+
+    pcImg.one("animationend", function () {
+    // 判定画像のパス
+    const judgImages = {
+      "勝ち": "img/win.png",
+      "負け": "img/lose.png",
+      "相子だよ": "img/draw.png"
+    };
+
+    const popup = $("#judgment_popup");
+    popup.css("background-image", `url('${judgImages[judg]}')`);
+    popup.fadeIn(300);
+
+    // 3秒後に非表示＆手の画像リセット
+    setTimeout(() => {
+      popup.fadeOut(300);
+      pcImg.removeClass("fade-in-right").css("opacity", 0);
+      userImg.removeClass("fade-in-left").css("opacity", 0);
+    }, 3000);
+  });
+});
+
+  }
+
+  //関数の外でイベントを登録
+  $("#gu_btn").on("click", function () {
+    play('グー');
+  });
+  $("#cho_btn").on("click", function () {
+    play('チョキ');
+  });
+  $("#par_btn").on("click", function () {
+    play('パー');
+  });
+
+
+   
+    </script>
+</body>
+
+</html>
